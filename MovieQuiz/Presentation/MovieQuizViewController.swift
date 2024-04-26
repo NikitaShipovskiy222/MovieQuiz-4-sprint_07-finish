@@ -10,6 +10,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     private var presenter: MovieQuizPresenter!
+    var isAnsweringQuestion = false
 
     // MARK: - Lifecycle
 
@@ -17,7 +18,9 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         super.viewDidLoad()
 
         presenter = MovieQuizPresenter(viewController: self)
-
+        
+        yesBottun.isEnabled = true
+        noBottun.isEnabled = true
         imageView.layer.cornerRadius = 20
     }
 
@@ -25,10 +28,32 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     @IBAction func yesButtonClicked(_ sender: UIButton) {
         presenter.yesButtonClicked()
+        
+        if !isAnsweringQuestion {
+            isAnsweringQuestion = true
+            yesBottun.isEnabled = false
+            noBottun.isEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.isAnsweringQuestion = false
+                self.yesBottun.isEnabled = true
+                self.noBottun.isEnabled = true
+            }
+        }
     }
     
     @IBAction func noButtonClicked(_ sender: UIButton) {
         presenter.noButtonClicked()
+        
+        if !isAnsweringQuestion {
+            isAnsweringQuestion = true
+            yesBottun.isEnabled = false
+            noBottun.isEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.isAnsweringQuestion = false
+                self.yesBottun.isEnabled = true
+                self.noBottun.isEnabled = true
+            }
+        }
     }
     
     
@@ -92,4 +117,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
 
         alert.addAction(action)
     }
+    
+    
+    
 }
